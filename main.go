@@ -22,8 +22,10 @@ func NewBuilding(q [][]int, cap int) building {
 	bldg := building{}
 	bldg.Queues = q
 	el := elevator{}
+	//elevator always starts at 0
 	el.History = []int{0}
 	el.Capacity = cap
+	//elevator will always start going up
 	el.Direction = 1
 	bldg.El = el
 	return bldg
