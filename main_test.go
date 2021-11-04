@@ -18,7 +18,7 @@ func TestUp(t *testing.T) {
 	bldg := NewBuilding(queues, 5)
 	bldg.moveElevator()
 	if !reflect.DeepEqual(bldg.El.History, []int{0, 2, 5, 0}) {
-		t.Fatalf(`History doesn't match expectation`)
+		t.Fatalf(`Expectated: {0, 2, 5, 0} Got: %v`, bldg.El.History)
 	}
 }
 func TestDown(t *testing.T) {
@@ -34,7 +34,7 @@ func TestDown(t *testing.T) {
 	bldg := NewBuilding(queues, 5)
 	bldg.moveElevator()
 	if !reflect.DeepEqual(bldg.El.History, []int{0, 2, 1, 0}) {
-		t.Fatalf(`History doesn't match expectation`)
+		t.Fatalf(`Expectated: {0, 2, 1, 0} Got: %v`, bldg.El.History)
 	}
 }
 func TestUpAndUp(t *testing.T) {
@@ -50,7 +50,7 @@ func TestUpAndUp(t *testing.T) {
 	bldg := NewBuilding(queues, 5)
 	bldg.moveElevator()
 	if !reflect.DeepEqual(bldg.El.History, []int{0, 1, 2, 3, 4, 5, 0}) {
-		t.Fatalf(`History doesn't match expectation`)
+		t.Fatalf(`Expectated: {0, 1, 2, 3, 4, 5, 0} Got: %v`, bldg.El.History)
 	}
 }
 func TestDownAndDown(t *testing.T) {
@@ -67,5 +67,21 @@ func TestDownAndDown(t *testing.T) {
 	bldg.moveElevator()
 	if !reflect.DeepEqual(bldg.El.History, []int{0, 5, 4, 3, 2, 1, 0}) {
 		t.Fatalf(`Expectated: {0, 5, 4, 3, 2, 1, 0}, Got: %v`, bldg.El.History)
+	}
+}
+func TestDownAndDownWithCap(t *testing.T) {
+	queues := [][]int{
+		{},        // G
+		{0},       // 1
+		{},        // 2
+		{},        // 3
+		{2, 2, 2}, // 4
+		{3, 3},    // 5
+		{},        // 6
+	}
+	bldg := NewBuilding(queues, 3)
+	bldg.moveElevator()
+	if !reflect.DeepEqual(bldg.El.History, []int{0, 5, 4, 3, 2, 1, 0, 4, 2, 0}) {
+		t.Fatalf(`Expectated: {0, 5, 4, 3, 2, 1, 0, 4, 2, 0}, Got: %v`, bldg.El.History)
 	}
 }
