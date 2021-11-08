@@ -53,14 +53,12 @@ func (b *building) getMaxFloor() {
 
 func (b *building) moveElevator() {
 	stopAtFloor := false
-	elPop := len(b.El.Contents)
 	qPop := len(b.Queues[b.El.Floor])
 	//Let people off from contents
-	for i := 0; i < elPop; i++ {
+	for i := 0; i < len(b.El.Contents); i++ {
 		if b.El.Contents[i] == b.El.Floor {
 			b.El.Contents = append(b.El.Contents[:i], b.El.Contents[i+1:]...)
 			i--
-			elPop--
 			stopAtFloor = true
 		}
 	}
@@ -68,10 +66,9 @@ func (b *building) moveElevator() {
 	for i := 0; i < qPop; i++ {
 		if (b.Queues[b.El.Floor][i]-b.El.Floor)*b.El.Direction > 0 {
 			stopAtFloor = true
-			if elPop < b.El.Capacity {
+			if len(b.El.Contents) < b.El.Capacity {
 				//add to elevator
 				b.El.Contents = append(b.El.Contents, b.Queues[b.El.Floor][i])
-				elPop++
 				//remove from queue
 				b.Queues[b.El.Floor] = append(b.Queues[b.El.Floor][:i], b.Queues[b.El.Floor][i+1:]...)
 				b.PeopleInQueues--
@@ -86,7 +83,7 @@ func (b *building) moveElevator() {
 	}
 	// if difference between floor and maxfloor times direction >= 0 then not yet at maxfloor
 	// if at or beyond maxfloor and elevator empty, switch directions
-	if (b.El.Floor-b.El.MaxFloorInDir)*b.El.Direction >= 0 && elPop == 0 {
+	if (b.El.Floor-b.El.MaxFloorInDir)*b.El.Direction >= 0 && len(b.El.Contents) == 0 {
 		b.El.Floor += b.El.Direction
 		b.El.Direction *= -1
 		//recalculate max floor with new direction
@@ -95,7 +92,7 @@ func (b *building) moveElevator() {
 	// go to next floor in direction
 	b.El.Floor = b.El.Floor + b.El.Direction
 	// if more people need to be picked up or people remain on elevator, recurse
-	if b.PeopleInQueues > 0 || elPop > 0 {
+	if b.PeopleInQueues > 0 || len(b.El.Contents) > 0 {
 		b.moveElevator()
 	} else if b.El.History[len(b.El.History)-1] != 0 {
 		b.El.History = append(b.El.History, 0)
