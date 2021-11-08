@@ -18,7 +18,7 @@ func TestUp(t *testing.T) {
 	bldg := NewBuilding(queues, 5)
 	bldg.moveElevator()
 	if !reflect.DeepEqual(bldg.El.History, []int{0, 2, 5, 0}) {
-		t.Fatalf(`Expectated: {0, 2, 5, 0} Got: %v`, bldg.El.History)
+		t.Fatalf(`Expected: {0, 2, 5, 0} Got: %v`, bldg.El.History)
 	}
 }
 func TestDown(t *testing.T) {
@@ -34,7 +34,7 @@ func TestDown(t *testing.T) {
 	bldg := NewBuilding(queues, 5)
 	bldg.moveElevator()
 	if !reflect.DeepEqual(bldg.El.History, []int{0, 2, 1, 0}) {
-		t.Fatalf(`Expectated: {0, 2, 1, 0} Got: %v`, bldg.El.History)
+		t.Fatalf(`Expected: {0, 2, 1, 0} Got: %v`, bldg.El.History)
 	}
 }
 func TestUpAndUp(t *testing.T) {
@@ -50,7 +50,7 @@ func TestUpAndUp(t *testing.T) {
 	bldg := NewBuilding(queues, 5)
 	bldg.moveElevator()
 	if !reflect.DeepEqual(bldg.El.History, []int{0, 1, 2, 3, 4, 5, 0}) {
-		t.Fatalf(`Expectated: {0, 1, 2, 3, 4, 5, 0} Got: %v`, bldg.El.History)
+		t.Fatalf(`Expected: {0, 1, 2, 3, 4, 5, 0} Got: %v`, bldg.El.History)
 	}
 }
 func TestDownAndDown(t *testing.T) {
@@ -66,7 +66,7 @@ func TestDownAndDown(t *testing.T) {
 	bldg := NewBuilding(queues, 5)
 	bldg.moveElevator()
 	if !reflect.DeepEqual(bldg.El.History, []int{0, 5, 4, 3, 2, 1, 0}) {
-		t.Fatalf(`Expectated: {0, 5, 4, 3, 2, 1, 0}, Got: %v`, bldg.El.History)
+		t.Fatalf(`Expected: {0, 5, 4, 3, 2, 1, 0}, Got: %v`, bldg.El.History)
 	}
 }
 func TestDownAndDownWithCap(t *testing.T) {
@@ -97,6 +97,6 @@ func TestIrina(t *testing.T) {
 	bldg := NewBuilding(queues, 2)
 	bldg.moveElevator()
 	if !reflect.DeepEqual(bldg.El.History, []int{0, 2, 3, 4, 5, 3, 1, 0, 2, 4, 5, 3, 0}) {
-		t.Fatalf(`Expectated:{0, 2, 3, 4, 5, 3, 1, 0, 2, 4, 5, 3, 0}, Got: %v`, bldg.El.History)
+		t.Fatalf(`Expected:{0, 2, 3, 4, 5, 3, 1, 0, 2, 4, 5, 3, 0}, Got: %v`, bldg.El.History)
 	}
 }
