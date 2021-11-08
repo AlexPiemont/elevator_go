@@ -82,7 +82,7 @@ func TestDownAndDownWithCap(t *testing.T) {
 	bldg := NewBuilding(queues, 3)
 	bldg.moveElevator()
 	if !reflect.DeepEqual(bldg.El.History, []int{0, 5, 4, 3, 2, 1, 0, 4, 2, 0}) {
-		t.Fatalf(`Expectated: {0, 5, 4, 3, 2, 1, 0, 4, 2, 0}, Got: %v`, bldg.El.History)
+		t.Fatalf(`Expected: {0, 5, 4, 3, 2, 1, 0, 4, 2, 0}, Got: %v`, bldg.El.History)
 	}
 }
 func TestIrina(t *testing.T) {
