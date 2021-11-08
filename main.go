@@ -75,11 +75,6 @@ func (b *building) moveElevator() {
 	//Let people on who are going in the same direction
 	if qPop > 0 {
 		for i := 0; i < qPop; i++ {
-			//if the difference between desired and actual floor * direction is positive,
-			//then the person is going the same direction
-			//e.g. person going to 4 from 3 difference is 1. If direction is 1 then result is 1, positive
-			// person going to 3 from 4 difference is -1. if direction is -1 (down) then result is 1, positive
-			// mismatch in sign between difference and direction means negative result means not going same dir
 			if (b.Queues[b.El.Floor][i]-b.El.Floor)*b.El.Direction > 0 {
 				stopAtFloor = true
 				if elPop < b.El.Capacity {
@@ -102,12 +97,6 @@ func (b *building) moveElevator() {
 	// if difference between floor and maxfloor times direction >= 0 then not yet at maxfloor
 	// if at or beyond maxfloor and elevator empty, switch directions
 	if (b.El.Floor-b.El.MaxFloorInDir)*b.El.Direction >= 0 && elPop == 0 {
-		//before switching direction, increment floor in direction so that iteration
-		// doesn't skip current floor
-		// Essentially, if this is not done, the elevator might stop at a floor with people
-		// who are headed in the wrong direction and therefore not pick them up, then switch direction,
-		// then go to the opposite direction without picking up these people. This line allows
-		// the elevator to redo the drop-off/pick-up logic at the current floor with the new direction
 		b.El.Floor += b.El.Direction
 		b.El.Direction *= -1
 		//recalculate max floor with new direction
