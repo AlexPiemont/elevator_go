@@ -61,7 +61,6 @@ func (b *building) moveElevator() {
 	stopAtFloor := false
 	elPop := len(b.El.Contents)
 	qPop := len(b.Queues[b.El.Floor])
-	//fmt.Println(qPop)
 	//Let people off from contents
 	if elPop > 0 {
 		for i := 0; i < elPop; i++ {
@@ -82,9 +81,8 @@ func (b *building) moveElevator() {
 			// person going to 3 from 4 difference is -1. if direction is -1 (down) then result is 1, positive
 			// mismatch in sign between difference and direction means negative result means not going same dir
 			if (b.Queues[b.El.Floor][i]-b.El.Floor)*b.El.Direction > 0 {
-				//fmt.Printf("i: %d", i)
+				stopAtFloor = true
 				if elPop < b.El.Capacity {
-					stopAtFloor = true
 					//add to elevator
 					b.El.Contents = append(b.El.Contents, b.Queues[b.El.Floor][i])
 					elPop++
@@ -98,7 +96,7 @@ func (b *building) moveElevator() {
 		}
 	}
 	// if anyone got on or off, add to path
-	if stopAtFloor {
+	if stopAtFloor && b.El.Floor != b.El.History[len(b.El.History)-1] {
 		b.El.History = append(b.El.History, b.El.Floor)
 	}
 	// if difference between floor and maxfloor times direction >= 0 then not yet at maxfloor
