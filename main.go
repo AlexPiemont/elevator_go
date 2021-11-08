@@ -43,12 +43,6 @@ func NewBuilding(q [][]int, cap int) building {
 	return bldg
 }
 
-func Abs(num int) int {
-	if num < 0 {
-		return -num
-	}
-	return num
-}
 func (b *building) getMaxFloor() {
 	for i := b.El.Floor + b.El.Direction; i < b.Floors && i >= 0; i += b.El.Direction {
 		if len(b.Queues[i]) > 0 {
@@ -62,31 +56,27 @@ func (b *building) moveElevator() {
 	elPop := len(b.El.Contents)
 	qPop := len(b.Queues[b.El.Floor])
 	//Let people off from contents
-	if elPop > 0 {
-		for i := 0; i < elPop; i++ {
-			if b.El.Contents[i] == b.El.Floor {
-				b.El.Contents = append(b.El.Contents[:i], b.El.Contents[i+1:]...)
-				i--
-				elPop--
-				stopAtFloor = true
-			}
+	for i := 0; i < elPop; i++ {
+		if b.El.Contents[i] == b.El.Floor {
+			b.El.Contents = append(b.El.Contents[:i], b.El.Contents[i+1:]...)
+			i--
+			elPop--
+			stopAtFloor = true
 		}
 	}
 	//Let people on who are going in the same direction
-	if qPop > 0 {
-		for i := 0; i < qPop; i++ {
-			if (b.Queues[b.El.Floor][i]-b.El.Floor)*b.El.Direction > 0 {
-				stopAtFloor = true
-				if elPop < b.El.Capacity {
-					//add to elevator
-					b.El.Contents = append(b.El.Contents, b.Queues[b.El.Floor][i])
-					elPop++
-					//remove from queue
-					b.Queues[b.El.Floor] = append(b.Queues[b.El.Floor][:i], b.Queues[b.El.Floor][i+1:]...)
-					b.PeopleInQueues--
-					qPop--
-					i--
-				}
+	for i := 0; i < qPop; i++ {
+		if (b.Queues[b.El.Floor][i]-b.El.Floor)*b.El.Direction > 0 {
+			stopAtFloor = true
+			if elPop < b.El.Capacity {
+				//add to elevator
+				b.El.Contents = append(b.El.Contents, b.Queues[b.El.Floor][i])
+				elPop++
+				//remove from queue
+				b.Queues[b.El.Floor] = append(b.Queues[b.El.Floor][:i], b.Queues[b.El.Floor][i+1:]...)
+				b.PeopleInQueues--
+				qPop--
+				i--
 			}
 		}
 	}
@@ -107,13 +97,10 @@ func (b *building) moveElevator() {
 	// if more people need to be picked up or people remain on elevator, recurse
 	if b.PeopleInQueues > 0 || elPop > 0 {
 		b.moveElevator()
-	} else {
-		// if elevator both empty and queues empty
-		// check if the elevator is already at floor 0. If so, do nothing, if not, go to 0
-		if b.El.History[len(b.El.History)-1] != 0 {
-			b.El.History = append(b.El.History, 0)
-		}
+	} else if b.El.History[len(b.El.History)-1] != 0 {
+		b.El.History = append(b.El.History, 0)
 	}
+
 }
 
 func main() {
