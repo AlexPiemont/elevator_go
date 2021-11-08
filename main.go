@@ -51,17 +51,29 @@ func (b *building) getMaxFloor() {
 	}
 }
 
+func (e *elevator) registerStop() {
+	if e.Floor != e.History[len(e.History)-1] {
+		e.History = append(e.History, e.Floor)
+	}
+}
+
+func (e *elevator) unload() bool {
+	res := false
+	for i := 0; i < len(e.Contents); i++ {
+		if e.Contents[i] == e.Floor {
+			e.Contents = append(e.Contents[:i], e.Contents[i+1:]...)
+			i--
+			res = true
+		}
+	}
+	return res
+}
+
 func (b *building) moveElevator() {
 	stopAtFloor := false
 	qPop := len(b.Queues[b.El.Floor])
-	//Let people off from contents
-	for i := 0; i < len(b.El.Contents); i++ {
-		if b.El.Contents[i] == b.El.Floor {
-			b.El.Contents = append(b.El.Contents[:i], b.El.Contents[i+1:]...)
-			i--
-			stopAtFloor = true
-		}
-	}
+	//Let people off from elevator
+	stopAtFloor = b.El.unload()
 	//Let people on who are going in the same direction
 	for i := 0; i < qPop; i++ {
 		if (b.Queues[b.El.Floor][i]-b.El.Floor)*b.El.Direction > 0 {
@@ -78,8 +90,8 @@ func (b *building) moveElevator() {
 		}
 	}
 	// if anyone got on or off, add to path
-	if stopAtFloor && b.El.Floor != b.El.History[len(b.El.History)-1] {
-		b.El.History = append(b.El.History, b.El.Floor)
+	if stopAtFloor {
+		b.El.registerStop()
 	}
 	// if difference between floor and maxfloor times direction >= 0 then not yet at maxfloor
 	// if at or beyond maxfloor and elevator empty, switch directions
@@ -94,8 +106,9 @@ func (b *building) moveElevator() {
 	// if more people need to be picked up or people remain on elevator, recurse
 	if b.PeopleInQueues > 0 || len(b.El.Contents) > 0 {
 		b.moveElevator()
-	} else if b.El.History[len(b.El.History)-1] != 0 {
-		b.El.History = append(b.El.History, 0)
+	} else {
+		b.El.Floor = 0
+		b.El.registerStop()
 	}
 
 }
